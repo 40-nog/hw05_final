@@ -6,7 +6,6 @@ from .forms import PostForm, CommentForm
 from django.views.decorators.cache import cache_page
 
 
-
 def pagination(posts, request):
     paginator = Paginator(posts, 10)
     page_number = request.GET.get('page')

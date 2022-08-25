@@ -1,4 +1,3 @@
-import shutil
 import tempfile
 from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -46,7 +45,7 @@ class PostsPagesTests(TestCase):
             title='заголовок группы',
             slug='group_slug',
             description='описание группы')
-        
+
     def setUp(self) -> None:
         cache.clear()
         self.authorized_client = Client()
@@ -175,14 +174,16 @@ class PostsPagesTests(TestCase):
             )
         )
         self.assertIsNot(self.post, response.context['posts'])
-    
+
     def test_index_cache(self):
         posts = self.authorized_client.get(reverse('posts:index')).content
         Post.objects.create(
             text='Новый пост',
             author=self.user
         )
-        cached_posts = self.authorized_client.get(reverse('posts:index')).content
+        cached_posts = self.authorized_client.get(
+            reverse('posts:index')
+        ).content
         self.assertEqual(posts, cached_posts)
 
 
@@ -241,7 +242,7 @@ class FollowTests(TestCase):
             text='пост',
             group=cls.group,
         )
-    
+
     def setUp(self) -> None:
         cache.clear()
         self.guest_client = Client()
@@ -249,7 +250,7 @@ class FollowTests(TestCase):
         self.following_client = Client()
         self.authorized_client.force_login(self.user)
         self.following_client.force_login(self.following_user)
-    
+
     def test_follow(self):
         follow = reverse(
             'posts:profile_follow',
@@ -257,7 +258,7 @@ class FollowTests(TestCase):
         )
         self.authorized_client.get(follow, follow=True)
         self.assertEqual(Follow.objects.all().count(), 1)
-    
+
     def test_unfollow(self):
         unfollow = reverse(
             'posts:profile_unfollow',
@@ -265,7 +266,7 @@ class FollowTests(TestCase):
         )
         self.authorized_client.get(unfollow, follow=True)
         self.assertEqual(Follow.objects.all().count(), 0)
-    
+
     def test_new_post_to_followers(self):
         follow = reverse(
             'posts:profile_follow',
