@@ -29,7 +29,7 @@ class PostsPagesTests(TestCase):
             content=small_gif,
             content_type='image/gif'
         )
-        cls.user = User.objects.create_user(username='user')
+        cls.user = User.objects.create_user('user')
         cls.group = Group.objects.create(
             title='заголовок',
             slug='slug',
@@ -228,7 +228,7 @@ class FollowTests(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
-        cls.user = User.objects.create_user(username='user')
+        cls.user = User.objects.create_user('user')
         cls.following_user = User.objects.create_user(
             username='following_user'
         )
@@ -279,6 +279,8 @@ class FollowTests(TestCase):
         )
         response = self.authorized_client.get(reverse('posts:follow_index'))
         self.assertIn(self.post, response.context['page_obj'])
+        
+    def test_post_not_for_unfollowers(self):
         response_not_follow = self.following_client.get(
             reverse('posts:follow_index')
         )

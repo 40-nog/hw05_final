@@ -17,7 +17,7 @@ def pagination(posts, request):
 
 @cache_page(20, key_prefix='index_page')
 def index(request):
-    context = pagination(Post.objects.all(), request)
+    context = pagination(Post.objects.all().select_related('author'), request)
     return render(request, 'posts/index.html', context)
 
 
@@ -127,6 +127,5 @@ def profile_follow(request, username):
 @login_required
 def profile_unfollow(request, username):
     author = get_object_or_404(User, username=username)
-    if request.user != author:
-        Follow.objects.filter(author=author, user=request.user).delete()
+    Follow.objects.filter(author=author, user=request.user).delete()
     return redirect('posts:profile', username=username)
