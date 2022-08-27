@@ -279,7 +279,7 @@ class FollowTests(TestCase):
         )
         response = self.authorized_client.get(reverse('posts:follow_index'))
         self.assertIn(self.post, response.context['page_obj'])
-        
+
     def test_post_not_for_unfollowers(self):
         response_not_follow = self.following_client.get(
             reverse('posts:follow_index')

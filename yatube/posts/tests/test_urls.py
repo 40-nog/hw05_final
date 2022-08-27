@@ -17,12 +17,12 @@ class PostsURLTests(TestCase):
             slug='slug',
             description='описание'
         )
-        cls.user = User.objects.create_user(username='user')
+        cls.user = User.objects.create_user('user')
         cls.post = Post.objects.create(
             author=cls.user,
             text='пост',
         )
-        cls.non_author = User.objects.create_user(username='non_author')
+        cls.non_author = User.objects.create_user('non_author')
 
     def setUp(self):
         cache.clear()
